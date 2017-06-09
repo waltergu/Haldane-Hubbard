@@ -11,8 +11,10 @@ def vcaconstruct(parameters,basis,cell,lattice,terms,weiss,mask=['nambu'],**karg
     config=IDFConfig(priority=DEFAULT_FERMIONIC_PRIORITY,pids=lattice.pids,map=idfmap)
     cgf=ED.FGF(operators=fspoperators(config.table(),lattice),nstep=150,prepare=ED.EDGFP,run=ED.EDGF)
     vca=VCA.VCA(
-        dout=       'result/vca',
+        dlog=       'log/vca',
         din=        'data/vca',
+        dout=       'result/vca',
+        log=        '%s_%s_%s_%s_VCA.log'%(name,lattice.name,basis.rep,parameters),
         cgf=        cgf,
         name=       '%s_%s_%s'%(name,lattice.name,basis.rep),
         basis=      basis,
@@ -28,3 +30,4 @@ def vcaconstruct(parameters,basis,cell,lattice,terms,weiss,mask=['nambu'],**karg
     eb=VCA.EB(name='EB',path=hexagon_gkm(nk=100),mu=parameters[2]/2,emin=-5.0,emax=5.0,eta=0.05,ne=401,run=VCA.VCAEB)
     vca.register(eb)
     vca.summary()
+    return vca

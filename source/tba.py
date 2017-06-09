@@ -9,7 +9,10 @@ def tbaconstruct(parameters,lattice,terms,**karg):
     assert len(parameters)==len(terms)
     config=IDFConfig(priority=DEFAULT_FERMIONIC_PRIORITY,pids=lattice.pids,map=idfmap)
     tba=TBA.TBA(
+        dlog=       'log/tba',
+        din=        'data/tba',
         dout=       'result/tba',
+        log=        '%s_%s_%s_TBA.log'%(name,lattice.name,parameters),
         name=       '%s_%s'%(name,lattice.name),
         lattice=    lattice,
         config=     config,
@@ -31,4 +34,7 @@ def tbaconstruct(parameters,lattice,terms,**karg):
     elif karg.get('job',None)=='GSE':
         kspace=KSpace(reciprocals=lattice.reciprocals,nk=200) if len(lattice.vectors)>0 and karg.get('kspace',True) else None
         GSE=tba.gse(filling=0.5,kspace=kspace)
-        print Info.from_ordereddict({'Total':GSE,'Site':GSE/len(lattice)/(1 if kspace is None else kspace.rank('k'))})
+        tba.log.open()
+        tba.log<<Info.from_ordereddict({'Total':GSE,'Site':GSE/len(lattice)/(1 if kspace is None else kspace.rank('k'))})<<'\n'
+        tba.log.close()
+    return tba

@@ -10,9 +10,10 @@ def dmrgconstruct(parameters,lattice,terms,targets,core='idmrg',**karg):
     assert len(parameters)==len(terms)
     priority,layers,mask=DEGFRE_FERMIONIC_PRIORITY,DEGFRE_FERMIONIC_LAYERS,['nambu']
     dmrg=DMRG.DMRG(
-        log=        Log('log/%s-%s-%s-%s.log'%(name,lattice.name.replace('+',str(2*len(targets))),parameters,repr(targets[-1]))),
+        dlog=       'log/dmrg',
         din=        'data/dmrg',
         dout=       'result/dmrg',
+        log=        '%s_%s_%s_%s_DMRG.log'%(name,lattice.name.replace('+',str(2*len(targets))),parameters,repr(targets[-1])),
         name=       '%s_%s'%(name,lattice.name),
         mps=        MPS(mode='NB' if targets[-1] is None else 'QN'),
         lattice=    lattice,
@@ -34,3 +35,4 @@ def dmrgconstruct(parameters,lattice,terms,targets,core='idmrg',**karg):
     else:
         raise ValueError('dmrgconstruct error: not supported core %s.'%core)
     dmrg.summary()
+    return dmrg

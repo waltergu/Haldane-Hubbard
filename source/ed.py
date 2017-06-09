@@ -9,8 +9,10 @@ def edconstruct(parameters,basis,lattice,terms,**karg):
     assert len(parameters)==len(terms)
     config=IDFConfig(priority=DEFAULT_FERMIONIC_PRIORITY,pids=lattice.pids,map=idfmap)
     ed=ED.FED(
-        dout=       'result/ed',
+        dlog=       'log/ed',
         din=        'data/ed',
+        dout=       'result/ed',
+        log=        '%s_%s_%s_%s_ED.log'%(name,lattice.name,basis.rep,parameters),
         name=       '%s_%s_%s'%(name,lattice.name,basis.rep),
         basis=      basis,
         lattice=    lattice,
@@ -25,4 +27,7 @@ def edconstruct(parameters,basis,lattice,terms,**karg):
         ed.summary()
     elif karg.get('job',None)=='GSE':
         GSE=ed.eig(k=1)[0]
-        print Info.from_ordereddict({'Total':GSE,'Site':GSE/len(lattice)})
+        ed.log.open()
+        ed.log<<Info.from_ordereddict({'Total':GSE,'Site':GSE/len(lattice)})<<'\n'
+        ed.log.close()
+    return ed
