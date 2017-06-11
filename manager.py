@@ -4,42 +4,79 @@ from source import *
 import numpy as np
 import mkl
 
-mkl.set_num_threads(1)
+# tbatasks
+def tbatasks(parameters,lattice,job='APP',kspace=True):
+    import HamiltonianPy.FreeSystem as TBA
+    tba=tbaconstruct(parameters,lattice,[t1,t2])
+    if job=='APP':
+        if lattice.name.count('P')==2:
+            eb=EB(name='EB',path=hexagon_gkm(nk=100) if kspace else None,run=TBA.TBAEB)
+        elif lattice.name.count('P')==1:
+            eb=EB(name='EB',path=KSpace(reciprocals=lattice.reciprocals,segments=[(-0.5,0.5)],end=True,nk=401) if kspace else None,run=TBA.TBAEB)
+        else:
+            eb=EB(name='EB',run=TBA.TBAEB)
+        tba.register(eb)
+        tba.summary()
+    elif job=='GSE':
+        kspace=KSpace(reciprocals=lattice.reciprocals,nk=200) if len(lattice.vectors)>0 and kspace else None
+        GSE=tba.gse(filling=0.5,kspace=kspace)
+        tba.log.open()
+        tba.log<<Info.from_ordereddict({'Total':GSE,'Site':GSE/len(lattice)/(1 if kspace is None else kspace.rank('k'))})<<'\n'
+        tba.log.close()
 
-# When using log files, set it to be False
-Engine.DEBUG=False
+# edtasks
+def edtasks(parameters,basis,lattice,job='APP'):
+    import HamiltonianPy.ED as ED
+    ed=edconstruct(parameters,basis,lattice,[t1,t2,Um])
+    if job=='APP':
+        el=ED.EL(name='EL',path=BaseSpace(['U',np.linspace(0,30.0,301)]),ns=1,nder=2,run=ED.EDEL)
+        ed.register(el)
+        ed.summary()
+    elif job=='GSE':
+        GSE=ed.eig(k=1)[0]
+        ed.log.open()
+        ed.log<<Info.from_ordereddict({'Total':GSE,'Site':GSE/len(lattice)})<<'\n'
+        ed.log.close()
 
-# Run the engines. Replace 'f' with the correct function
-#mpirn(f,parameters,bcast=True)
+# vcatasks
+def vcatasks(parameters,basis,cell,lattice):
+    import HamiltonianPy.VCA as VCA
+    vca=vcaconstruct(parameters,basis,cell,lattice,[t1,t2,U],[])
+    eb=VCA.EB(name='EB',path=hexagon_gkm(nk=100),mu=parameters[2]/2,emin=-5.0,emax=5.0,eta=0.05,ne=401,run=VCA.VCAEB)
+    vca.register(eb)
+    vca.summary()
 
-# tba
-parameters,terms=[-1.0,0.2],[t1,t2]
-# APP
-# bulk
-#tbaconstruct(parameters,H2('1P-1P',nneighbour),terms,job='APP',kspace=True)
-# armchair
-#for m in [2,4,6]:
-#    tbaconstruct(parameters,H4('%sO-1P'%m,nneighbour),terms,job='APP',kspace=True)
-#    tbaconstruct(parameters,H6('%sO-1P'%m,nneighbour),terms,job='APP',kspace=True)
-#    tbaconstruct(parameters,H4('%sO-%sP'%(m,int(m*1.5)),nneighbour),terms,job='APP',kspace=False)
-#    tbaconstruct(parameters,H6('%sO-%sP'%(m,int(m*1.5)),nneighbour),terms,job='APP',kspace=False)
-# zigzag
-#for m in [2,4,6]:
-#    tbaconstruct(parameters,H4('1P-%sO'%m,nneighbour),terms,job='APP',kspace=True)
-#    tbaconstruct(parameters,H4('%sP-%sO'%(int(m*1.5),m),nneighbour),terms,job='APP',kspace=False)
-# GSE
-#tbaconstruct(parameters,H4('2O-2P',nneighbour),terms,job='GSE',kspace=False)
+if __name__=='__main__':
+    mkl.set_num_threads(1)
 
-# ed
-parameters,terms=[-1.0,0.2,1.0],[t1,t2,Um]
-#edconstruct(parameters,FBasis((12,6)),H6('1P-1P',nneighbour),terms,job='APP')
-#edconstruct(parameters,FBasis((16,8)),H4('2O-1P',nneighbour),terms,job='GSE')
+    # When using log files, set it to be False
+    Engine.DEBUG=True
 
-# vca
-parameters,terms,weiss=[-1.0,0.2,0.0],[t1,t2,U],[]
-#vcaconstruct(parameters,FBasis((12,6)),H2('1P-1P',nneighbour),H6('1P-1P',nneighbour),terms,weiss)
+    # Run the engines. Replace 'f' with the correct function
+    #mpirn(f,parameters,bcast=True)
 
-# dmrg
-m,n=2,1
-parameters,terms=[-1.0,0.2,0.0],[t1,t2,U]
-#dmrgconstruct(parameters,H4.cylinder(0,'1O-%sP'%n,nneighbour),terms,[SPQN((8*n*(i+1),0.0)) for i in xrange(m/2)],core='idmrg')
+    # parameters
+    parameters=[-1.0,0.2,0.0]
+
+    #tba tasks
+    #tbatasks(parameters,H2('1P-1P',nneighbour),job='APP',kspace=True)
+    #for m in [2,4,6]:
+    #    tbatasks(parameters,H4('%sO-1P'%m,nneighbour),job='APP',kspace=True)
+    #    tbatasks(parameters,H6('%sO-1P'%m,nneighbour),job='APP',kspace=True)
+    #    tbatasks(parameters,H4('%sO-%sP'%(m,int(m*1.5)),nneighbour),job='APP',kspace=False)
+    #    tbatasks(parameters,H6('%sO-%sP'%(m,int(m*1.5)),nneighbour),job='APP',kspace=False)
+    #for m in [2,4,6]:
+    #    tbatasks(parameters,H4('1P-%sO'%m,nneighbour),job='APP',kspace=True)
+    #    tbatasks(parameters,H4('%sP-%sO'%(int(m*1.5),m),nneighbour),job='APP',kspace=False)
+    #tbatasks(parameters,H4('2O-1P',nneighbour),job='GSE',kspace=False)
+
+    # ed tasks
+    #edtasks(parameters,FBasis((12,6)),H6('1P-1P',nneighbour),job='APP')
+    #edtasks(parameters,FBasis((16,8)),H4('2O-1P',nneighbour),job='GSE')
+
+    #vca tasks
+    #vcatasks(parameters,FBasis((12,6)),H2('1P-1P',nneighbour),H6('1P-1P',nneighbour))
+
+    # dmrg
+    m,n=2,1
+    dmrgconstruct(parameters,H4.cylinder(0,'1O-%sP'%n,nneighbour),[t1,t2,U],[SPQN((8*n*(i+1),0.0)) for i in xrange(m/2)],core='fdmrg')

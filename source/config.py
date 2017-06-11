@@ -24,10 +24,10 @@ def haldane_hopping(bond):
     return result
 
 # terms
-t1=lambda value: Hopping('t1',value)
-t2=lambda value: Hopping('t2',value*1.0j,neighbour=2,amplitude=haldane_hopping)
-U=lambda value: Hubbard('U',value)
-Um=lambda value: Hubbard('U',value,modulate=True)
+t1=lambda *parameters: Hopping('t1',parameters[0])
+t2=lambda *parameters: Hopping('t2',parameters[1]*1.0j,neighbour=2,amplitude=haldane_hopping)
+U=lambda *parameters: Hubbard('U',parameters[2])
+Um=lambda *parameters: Hubbard('U',parameters[2],modulate=True)
 
 # cluster
 H2,H4,H6=Hexagon('H2'),Hexagon('H4'),Hexagon('H6')
