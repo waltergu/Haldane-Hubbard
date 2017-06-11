@@ -56,6 +56,7 @@ if __name__=='__main__':
     #mpirn(f,parameters,bcast=True)
 
     # parameters
+    m,n=2,2
     parameters=[-1.0,0.2,0.0]
 
     #tba tasks
@@ -68,7 +69,7 @@ if __name__=='__main__':
     #for m in [2,4,6]:
     #    tbatasks(parameters,H4('1P-%sO'%m,nneighbour),job='APP',kspace=True)
     #    tbatasks(parameters,H4('%sP-%sO'%(int(m*1.5),m),nneighbour),job='APP',kspace=False)
-    #tbatasks(parameters,H4('2O-1P',nneighbour),job='GSE',kspace=False)
+    #tbatasks(parameters,H4('%sO-%sP'%(m,n),nneighbour),job='GSE',kspace=False)
 
     # ed tasks
     #edtasks(parameters,FBasis((12,6)),H6('1P-1P',nneighbour),job='APP')
@@ -78,5 +79,4 @@ if __name__=='__main__':
     #vcatasks(parameters,FBasis((12,6)),H2('1P-1P',nneighbour),H6('1P-1P',nneighbour))
 
     # dmrg
-    m,n=2,1
     #dmrgconstruct(parameters,H4.cylinder(0,'1O-%sP'%n,nneighbour),[t1,t2,U],[SPQN((8*n*(i+1),0.0)) for i in xrange(m/2)],core='idmrg')
