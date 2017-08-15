@@ -1,6 +1,6 @@
 from HamiltonianPy import *
 
-__all__=['name','nneighbour','idfmap','qnsmap','t1','t2','U','Um','H2','H4','H6']
+__all__=['name','nneighbour','idfmap','qnsmap','t1','t2','U','Um','afm','H2','H4','H6','H8P']
 
 # The configs of the model
 name='HH'
@@ -28,6 +28,7 @@ t1=lambda *parameters: Hopping('t1',parameters[0])
 t2=lambda *parameters: Hopping('t2',parameters[1]*1.0j,neighbour=2,amplitude=haldane_hopping)
 U=lambda *parameters: Hubbard('U',parameters[2])
 Um=lambda *parameters: Hubbard('U',parameters[2],modulate=True)
+afm=lambda *parameters: Onsite('afm',parameters[3],indexpacks=sigmaz('sp')*sigmaz('sl'),modulate=True)
 
 # cluster
-H2,H4,H6=Hexagon('H2'),Hexagon('H4'),Hexagon('H6')
+H2,H4,H6,H8P=Hexagon('H2'),Hexagon('H4'),Hexagon('H6'),Hexagon('H8P')

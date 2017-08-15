@@ -30,8 +30,12 @@ def edtasks(parameters,basis,lattice,job='EL'):
 # vcatasks
 def vcatasks(parameters,basis,cell,lattice,job='EB'):
     import HamiltonianPy.VCA as VCA
-    vca=vcaconstruct(parameters,basis,cell,lattice,[t1,t2,U],[])
-    if job=='EB': vca.register(VCA.EB(name='EB',path=hexagon_gkm(nk=100),mu=parameters[2]/2,emin=-5.0,emax=5.0,eta=0.05,ne=401,run=VCA.VCAEB))
+    vca=vcaconstruct(parameters,basis,cell,lattice,[t1,t2,U],[afm])
+    if job=='EB':
+        vca.register(VCA.EB(name='EB',path=hexagon_gkm(nk=100),mu=parameters[2]/2,emin=-5.0,emax=5.0,eta=0.05,ne=401,run=VCA.VCAEB))
+    if job=='GPM':
+        gp=GP(name='GP',mu=parameters[2]/2,BZ=KSpace(reciprocals=lattice.reciprocals,nk=100),run=VCA.VCAGP)
+        vca.register(VCA.GPM(name='afm',BS=BaseSpace(('afm',np.linspace(0.0,0.1,11))),dependences=[gp],run=VCA.VCAGPM))
     vca.summary()
 
 if __name__=='__main__':
@@ -45,7 +49,7 @@ if __name__=='__main__':
 
     # parameters
     m,n=2,1
-    parameters=[-1.0,0.2,0.0]
+    parameters=[1.0,0.0,80.0,0.0]
 
     #tba tasks
     #tbatasks(parameters,H2('1P-1P',nneighbour),job='EB',kspace=True)
@@ -65,6 +69,8 @@ if __name__=='__main__':
 
     #vca tasks
     #vcatasks(parameters,FBasis((12,6)),H2('1P-1P',nneighbour),H6('1P-1P',nneighbour),job='EB')
+    #vcatasks(parameters,FBasis((12,6)),H2('1P-1P',nneighbour),H6('1P-1P',nneighbour),job='GPM')
+    vcatasks(parameters,FBasis((16,8)),H2('1P-1P',nneighbour),H8P('1P-1P',nneighbour),job='GPM')
 
     # dmrg
     #dmrgconstruct(parameters,H4.cylinder(0,'1O-%sP'%n,nneighbour),[t1,t2,U],[SPQN((8*n*(i+1),0.0)) for i in xrange(m/2)],core='idmrg')
