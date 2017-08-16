@@ -49,7 +49,7 @@ if __name__=='__main__':
 
     # parameters
     m,n=2,1
-    parameters=[1.0,0.0,80.0,0.0]
+    parameters=[-1.0,0.0,80.0,0.0]
 
     #tba tasks
     #tbatasks(parameters,H2('1P-1P',nneighbour),job='EB',kspace=True)
@@ -66,11 +66,12 @@ if __name__=='__main__':
     # ed tasks
     #edtasks(parameters,FBasis((12,6)),H6('1P-1P',nneighbour),job='EL')
     #edtasks(parameters,FBasis((8*m*n,4*m*n)),H4('%sO-%sP'%(m,n),nneighbour),job='GSE')
+    edtasks(parameters,FBasis(up=(4,2),down=(4,2)),Hexagon('H4A')(),job='GSE')
 
     #vca tasks
     #vcatasks(parameters,FBasis((12,6)),H2('1P-1P',nneighbour),H6('1P-1P',nneighbour),job='EB')
     #vcatasks(parameters,FBasis((12,6)),H2('1P-1P',nneighbour),H6('1P-1P',nneighbour),job='GPM')
-    vcatasks(parameters,FBasis((16,8)),H2('1P-1P',nneighbour),H8P('1P-1P',nneighbour),job='GPM')
+    #vcatasks(parameters,FBasis((16,8)),H2('1P-1P',nneighbour),H8P('1P-1P',nneighbour),job='GPM')
 
     # dmrg
     #dmrgconstruct(parameters,H4.cylinder(0,'1O-%sP'%n,nneighbour),[t1,t2,U],[SPQN((8*n*(i+1),0.0)) for i in xrange(m/2)],core='idmrg')
