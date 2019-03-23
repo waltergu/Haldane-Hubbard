@@ -2,27 +2,27 @@ import numpy as np
 import HamiltonianPy.ED as ED
 import HamiltonianPy.VCA as VCA
 from HamiltonianPy import *
-from config import *
+from .config import *
 
 __all__=['vcaconstruct']
 
-def vcaconstruct(parameters,basis,cell,lattice,terms,weiss,mask=['nambu'],**karg):
-    config=IDFConfig(priority=DEFAULT_FERMIONIC_PRIORITY,pids=lattice.pids,map=idfmap)
-    # edit the value of nstep if needed
-    cgf=ED.FGF(operators=fspoperators(config.table(),lattice),nstep=150,prepare=ED.EDGFP,run=ED.EDGF)
+def vcaconstruct(name,parameters,sectors,cell,lattice,terms,weiss,baths=(),mask=('nambu',),**karg):
+    config=IDFConfig(priority=DEFAULT_FOCK_PRIORITY,pids=lattice.pids,map=idfmap)
     vca=VCA.VCA(
-        dlog=       'log/vca',
-        din=        'data/vca',
+        dlog=       'log',
+        din=        'data',
         dout=       'result/vca',
-        log=        '%s_%s_%s_%s_VCA.log'%(name,lattice.name,basis.rep,parameters),
-        cgf=        cgf,
-        name=       '%s_%s_%s'%(name,lattice.name,basis.rep),
-        basis=      basis,
+        name=       '%s_%s_%s_%s'%(name,lattice.name,cell.name,'_'.join(repr(sector) for sector in sectors)),
+        cgf=        VCA.VGF(nstep=150,method='S',prepare=ED.EDGFP,run=ED.EDGF),
+        parameters= parameters,
+        map=        parametermap,
+        sectors=    sectors,
         cell=       cell,
         lattice=    lattice,
         config=     config,
-        terms=      [term(*parameters) for term in terms],
-        weiss=      [term(*parameters) for term in weiss],
+        terms=      [term(**parameters) for term in terms],
+        weiss=      [term(**parameters) for term in weiss],
+        baths=      [term(**parameters) for term in baths],
         mask=       mask,
         dtype=      np.complex128
         )

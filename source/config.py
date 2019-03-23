@@ -1,34 +1,35 @@
 from HamiltonianPy import *
+import numpy as np
 
-__all__=['name','nneighbour','idfmap','qnsmap','t1','t2','U','Um','afm','H2','H4','H6','H8P']
+__all__=['name','nnb','parametermap','idfmap','t1','t2','U','afm','H2','H6']
 
 # The configs of the model
 name='HH'
-nneighbour=2
+nnb=2
+
+# parametermap
+parametermap=None
 
 # idfmap
-idfmap=lambda pid: Fermi(atom=pid.site%2,norbital=1,nspin=2,nnambu=1)
-
-# qnsmap
-qnsmap=lambda index: SzPQNS(index.spin-0.5)
+idfmap=lambda pid: Fock(atom=pid.site%2,norbital=1,nspin=2,nnambu=1)
 
 # haldane hopping
-def haldane_hopping(bond):
-    theta=azimuthd(bond.rcoord)
-    if abs(theta)<RZERO or abs(theta-120)<RZERO or abs(theta-240)<RZERO: 
-        result=1
+def haldane(bond):
+    assert bond.spoint.pid.site%2==bond.epoint.pid.site%2
+    theta,site=azimuthd(bond.rcoord),bond.epoint.pid.site%2
+    if np.allclose(theta,60) or np.allclose(theta,180) or np.allclose(theta,300):
+        result=1.0
     else:
-        result=-1
-    if bond.spoint.pid.site%2==1:
-        result=-result
+        result=-1.0
+    if site==1: result=-result
     return result
 
 # terms
-t1=lambda *parameters: Hopping('t1',parameters[0])
-t2=lambda *parameters: Hopping('t2',parameters[1]*1.0j,neighbour=2,amplitude=haldane_hopping)
-U=lambda *parameters: Hubbard('U',parameters[2])
-Um=lambda *parameters: Hubbard('U',parameters[2],modulate=True)
-afm=lambda *parameters: Onsite('afm',parameters[3],indexpacks=sigmaz('sp')*sigmaz('sl'),modulate=True)
+t1=lambda **parameters: Hopping('t1',parameters['t1'],neighbour=1)
+t2=lambda **parameters: Hopping('t2',parameters['t2']*1.0j,neighbour=2,amplitude=haldane)
+U=lambda **parameters: Hubbard('U',parameters['U'],modulate=True)
+afm=lambda **parameters: Onsite('afm',parameters['afm'],indexpacks=sigmaz('sp')*sigmaz('sl'),modulate=True)
 
 # cluster
-H2,H4,H6,H8P=Hexagon('H2'),Hexagon('H4'),Hexagon('H6'),Hexagon('H8P')
+H2=Hexagon('H2')
+H6=Hexagon('H6')

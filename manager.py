@@ -1,77 +1,76 @@
 from HamiltonianPy import *
-from HamiltonianPy.Misc import mpirun
 from source import *
+from collections import OrderedDict
 import numpy as np
 import mkl
 
 # tbatasks
-def tbatasks(parameters,lattice,job='EB',kspace=True):
+
+def tbatasks(name,parameters,lattice,terms,jobs=()):
     import HamiltonianPy.FreeSystem as TBA
-    tba=tbaconstruct(parameters,lattice,[t1,t2])
-    if job=='EB':
+    tba=tbaconstruct(name,parameters,lattice,terms)
+    if 'EB' in jobs:
         if len(lattice.vectors)==2:
-            tba.register(EB(name='EB',path=hexagon_gkm(nk=100) if kspace else None,run=TBA.TBAEB))
+            tba.register(EB(name='EB',path=hexagon_gkm(nk=100),run=TBA.TBAEB))
         elif len(lattice.vectors)==1:
-            tba.register(EB(name='EB',path=KSpace(reciprocals=lattice.reciprocals,segments=[(-0.5,0.5)],end=True,nk=401) if kspace else None,run=TBA.TBAEB))
+            tba.register(EB(name='EB',path=KSpace(reciprocals=lattice.reciprocals,segments=[(-0.5,0.5)],end=True,nk=401),run=TBA.TBAEB))
         elif len(lattice.vectors)==0:
             tba.register(EB(name='EB',run=TBA.TBAEB))
-    if job=='GSE':
-        tba.register(TBA.GSE(name='GSE',filling=0.5,kspace=KSpace(reciprocals=lattice.reciprocals,nk=200) if len(lattice.vectors)>0 and kspace else None,run=TBA.TBAGSE))
+    if 'GSE' in jobs:
+        tba.register(TBA.GSE(name='GSE',filling=0.5,kspace=KSpace(reciprocals=lattice.reciprocals,nk=200) if len(lattice.vectors)>0 else None,run=TBA.TBAGSE))
     tba.summary()
 
 # edtasks
-def edtasks(parameters,basis,lattice,job='EL'):
+def edtasks(name,parameters,basis,lattice,terms,jobs=()):
     import HamiltonianPy.ED as ED
-    ed=edconstruct(parameters,basis,lattice,[t1,t2,Um])
-    if job=='EL': ed.register(ED.EL(name='EL',path=BaseSpace(['U',np.linspace(0,30.0,301)]),ns=1,nder=2,run=ED.EDEL))
-    if job=='GSE': ed.register(GSE(name='GSE',run=ED.EDGSE))
+    ed=edconstruct(name,parameters,[basis],lattice,terms)
+    if 'EL' in jobs: ed.register(ED.EL(name='EL',path=BaseSpace(['U',np.linspace(0,30.0,301)]),ns=1,nder=2,run=ED.EDEL))
+    if 'GSE' in jobs: ed.register(ED.EIGS(name='GSE',ne=1,run=ED.EDEIGS))
     ed.summary()
 
 # vcatasks
-def vcatasks(parameters,basis,cell,lattice,job='EB'):
+def vcatasks(name,parameters,basis,cell,lattice,terms,weiss,baths=(),jobs=()):
     import HamiltonianPy.VCA as VCA
-    vca=vcaconstruct(parameters,basis,cell,lattice,[t1,t2,U],[afm])
-    if job=='EB':
-        vca.register(VCA.EB(name='EB',path=hexagon_gkm(nk=100),mu=parameters[2]/2,emin=-5.0,emax=5.0,eta=0.05,ne=401,run=VCA.VCAEB))
-    if job=='GPM':
-        gp=GP(name='GP',mu=parameters[2]/2,BZ=KSpace(reciprocals=lattice.reciprocals,nk=100),run=VCA.VCAGP)
-        vca.register(VCA.GPM(name='afm',BS=BaseSpace(('afm',np.linspace(0.0,0.1,11))),dependences=[gp],run=VCA.VCAGPM))
+    vca=vcaconstruct(name,parameters,[basis],cell,lattice,terms,weiss)
+    if 'EB' in jobs:
+        vca.register(VCA.EB(name='EB',path=hexagon_gkm(reciprocals=cell.reciprocals,nk=100),mu=parameters['U']/2,emin=-5.0,emax=5.0,eta=0.05,ne=401,run=VCA.VCAEB))
+    if 'TEB' in jobs:
+        vca.register(VCA.EB(name='TEB',path=hexagon_gkm(reciprocals=cell.reciprocals,nk=100),mu=parameters['U']/2,run=VCA.VCATEB))
+    if 'CN' in jobs:
+        vca.register(BC(name='CN',BZ=KSpace(reciprocals=cell.reciprocals,nk=100),mu=parameters['U']/2,savedata=False,plot=False,run=VCA.VCABC))
+    if 'GPM' in jobs:
+        vca.add(GP(name='GP',mu=parameters['U']/2,BZ=KSpace(reciprocals=lattice.reciprocals,nk=100),run=VCA.VCAGP))
+        vca.register(VCA.GPM(name='afm',BS=BaseSpace(('afm',np.linspace(0.0,0.1,11))),dependences=['GP'],run=VCA.VCAGPM))
     vca.summary()
 
 if __name__=='__main__':
     mkl.set_num_threads(1)
-
-    # When using log files, set it to be False
     Engine.DEBUG=True
 
-    # Run the engines. Replace 'f' with the correct function
-    #mpirn(f,parameters,bcast=True)
-
     # parameters
-    m,n=2,1
-    parameters=[-1.0,0.0,80.0,0.0]
+    parameters=OrderedDict()
+    parameters['t1']=1.0
+    parameters['t2']=0.2
 
-    #tba tasks
-    #tbatasks(parameters,H2('1P-1P',nneighbour),job='EB',kspace=True)
-    #for m in [2,4,6]:
-    #    tbatasks(parameters,H4('%sO-1P'%m,nneighbour),job='EB',kspace=True)
-    #    tbatasks(parameters,H6('%sO-1P'%m,nneighbour),job='EB',kspace=True)
-    #    tbatasks(parameters,H4('%sO-%sP'%(m,int(m*1.5)),nneighbour),job='EB',kspace=False)
-    #    tbatasks(parameters,H6('%sO-%sP'%(m,int(m*1.5)),nneighbour),job='EB',kspace=False)
-    #for m in [2,4,6]:
-    #    tbatasks(parameters,H4('1P-%sO'%m,nneighbour),job='EB',kspace=True)
-    #    tbatasks(parameters,H4('%sP-%sO'%(int(m*1.5),m),nneighbour),job='EB',kspace=False)
-    #tbatasks(parameters,H4('%sO-%sP'%(m,n),nneighbour),job='GSE',kspace=False)
+    # tba
+    #tbatasks(name,parameters,H2('1P-1P',nnb),[t1,t2],jobs=['EB'])
+    #tbatasks(name,parameters,H2('1P-1P',nnb),[t1,t2],jobs=['GSE'])
 
-    # ed tasks
-    #edtasks(parameters,FBasis((12,6)),H6('1P-1P',nneighbour),job='EL')
-    #edtasks(parameters,FBasis((8*m*n,4*m*n)),H4('%sO-%sP'%(m,n),nneighbour),job='GSE')
-    edtasks(parameters,FBasis(up=(4,2),down=(4,2)),Hexagon('H4A')(),job='GSE')
+    parameters['U']=4.6
 
-    #vca tasks
-    #vcatasks(parameters,FBasis((12,6)),H2('1P-1P',nneighbour),H6('1P-1P',nneighbour),job='EB')
-    #vcatasks(parameters,FBasis((12,6)),H2('1P-1P',nneighbour),H6('1P-1P',nneighbour),job='GPM')
-    #vcatasks(parameters,FBasis((16,8)),H2('1P-1P',nneighbour),H8P('1P-1P',nneighbour),job='GPM')
+    # ed
+    #edtasks(name,parameters,FBasis(12,6,0.0),H6('1P-1P',nnb),[t1,t2,U],jobs=['EL'])
+    #edtasks(name,parameters,FBasis(12,6,0.0),H6('1P-1P',nnb),[t1,t2,U],jobs=['GSE'])
 
-    # dmrg
-    #dmrgconstruct(parameters,H4.cylinder(0,'1O-%sP'%n,nneighbour),[t1,t2,U],[SPQN((8*n*(i+1),0.0)) for i in xrange(m/2)],core='idmrg')
+    parameters['afm']=0.0
+
+    # vca
+    #vcatasks(name,parameters,FBasis(12,6,0.0),H2('1P-1P',nnb),H6('1P-1P',nnb),[t1,t2,U],[afm],jobs=['EB'])
+    #vcatasks(name,parameters,FBasis(12,6,0.0),H2('1P-1P',nnb),H6('1P-1P',nnb),[t1,t2,U],[afm],jobs=['TEB'])
+    #vcatasks(name,parameters,FBasis(12,6,0.0),H2('1P-1P',nnb),H6('1P-1P',nnb),[t1,t2,U],[afm],jobs=['CN'])
+    #vcatasks(name,parameters,FBasis(12,6,0.0),H2('1P-1P',nnb),H6('1P-1P',nnb),[t1,t2,U],[afm],jobs=['GPM'])
+
+    #vcatasks(name,parameters,FBasis(4,2,0.0),H2('1P-1P',nnb),H2('1P-1P',nnb),[t1,t2,U],[afm],jobs=['EB'])
+    #vcatasks(name,parameters,FBasis(4,2,0.0),H2('1P-1P',nnb),H2('1P-1P',nnb),[t1,t2,U],[afm],jobs=['TEB'])
+    #vcatasks(name,parameters,FBasis(4,2,0.0),H2('1P-1P',nnb),H2('1P-1P',nnb),[t1,t2,U],[afm],jobs=['CN'])
+    #vcatasks(name,parameters,FBasis(4,2,0.0),H2('1P-1P',nnb),H2('1P-1P',nnb),[t1,t2,U],[afm],jobs=['GPM'])
