@@ -467,7 +467,7 @@ def edge():
     plt.ion()
 
     fig,axes=plt.subplots(nrows=2,ncols=6,sharex='col')
-    fig.subplots_adjust(left=0.045,right=0.990,top=0.98,bottom=0.080,hspace=0.1,wspace=0.20)
+    fig.subplots_adjust(left=0.045,right=0.990,top=0.98,bottom=0.060,hspace=0.1,wspace=0.20)
 
     nk,ne=200,400
     Us=['4.0','4.6','5.0','5.75','5.87','6.0']
@@ -490,11 +490,11 @@ def edge():
     for i,(tag,U,afm) in enumerate(zip(tags,Us,afms)):
         data=np.loadtxt('../result/vca/HH_H6^1P15O_0.5_-1.0_0.2j_%s_%s_VCACCT_TEB.dat'%(U,afm))
         axes[1][i].plot(data[:,0],data[:,1:],color='green',linewidth=2)
-        axes[1][i].text(135,2.8,'(%s$_2$)'%tag,fontsize=14,color='black')
+        axes[1][i].text(135,5*0.7,'(%s$_2$)'%tag,fontsize=14,color='black')
         axes[0][i].set_xlim(0,199)
-        axes[1][i].set_ylim(-4.0,4.0)
+        axes[1][i].set_ylim(-5,5)
         axes[1][i].minorticks_on()
-        axes[1][i].set_yticks([-4,-2,0,2,4])
+        axes[1][i].set_yticks([-5,-3,-1,1,3,5])
         for tick in axes[1][i].get_yticklabels():
             tick.set_fontsize(14)
         axes[1][i].set_xticks([0,99,199])
