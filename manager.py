@@ -56,7 +56,7 @@ if __name__=='__main__':
     #tbatasks(name,parameters,H2('1P-1P',nnb),[t1,t2],jobs=['EB'])
     #tbatasks(name,parameters,H2('1P-1P',nnb),[t1,t2],jobs=['GSE'])
 
-    parameters['U']=4.6
+    parameters['U']=5.00
 
     # ed
     #edtasks(name,parameters,FBasis(12,6,0.0),H6('1P-1P',nnb),[t1,t2,U],jobs=['EL'])
@@ -74,3 +74,8 @@ if __name__=='__main__':
     #vcatasks(name,parameters,FBasis(4,2,0.0),H2('1P-1P',nnb),H2('1P-1P',nnb),[t1,t2,U],[afm],jobs=['TEB'])
     #vcatasks(name,parameters,FBasis(4,2,0.0),H2('1P-1P',nnb),H2('1P-1P',nnb),[t1,t2,U],[afm],jobs=['CN'])
     #vcatasks(name,parameters,FBasis(4,2,0.0),H2('1P-1P',nnb),H2('1P-1P',nnb),[t1,t2,U],[afm],jobs=['GPM'])
+
+    #vcatasks(name,parameters,FBasis(12,6,0.0),H6('1P-1P',nnb),H6('1P-1P',nnb),[t1,t2,U],[afm],jobs=['EB'])
+    #vcatasks(name,parameters,FBasis(12,6,0.0),H6('1P-1P',nnb),H6('1P-1P',nnb),[t1,t2,U],[afm],jobs=['TEB'])
+    #vcatasks(name,parameters,FBasis(12,6,0.0),H6('1P-1P',nnb),H6('1P-1P',nnb),[t1,t2,U],[afm],jobs=['CN'])
+    #vcatasks(name,parameters,FBasis(12,6,0.0),H6('1P-1P',nnb),H6('1P-1P',nnb),[t1,t2,U],[afm],jobs=['GPM'])
