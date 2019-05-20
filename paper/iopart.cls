@@ -5,9 +5,6 @@
 %% but WITHOUT ANY WARRANTY; without even the implied warranty of 
 %% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 %% 
-%% Licensed under the LPPL: http://www.latex-project.org/lppl.txt
-%% Current Maintainer: IOP Publishing Ltd
-%% 
 %% \CharacterTable
 %%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
 %%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
@@ -121,7 +118,7 @@
 %
 % Generic title command for articles other than papers
 %
-% Usage: \article[Short title]{Article Type}{Full title}
+% Usage: \article[Short title]{ARTICLE TYPE}{Full title}
 % [Short title] is optional; use where title is too long
 % or contains footnotes, 50 characters maximum 
 %
@@ -148,13 +145,7 @@
 % Usage \letter{Full title}
 % No short title is required for Letters
 %
-\def\letter#1{\article[Letter to the Editor]{Letter to the Editor}{#1}}
-%
-% Fast Track Communications (added by sxb 9 March 2011)
-%
-% Usage \ftc{Full title} - there's no short title
-\def\ftc#1{\article[Fast Track Communication]{Fast Track Communication}{#1}}
-%
+\def\letter#1{\article[Letter to the Editor]{LETTER TO THE EDITOR}{#1}}
 %
 % Review articles
 %
@@ -163,8 +154,8 @@
 % or contains footnotes, 50 characters maximum 
 %
 \def\review{\@ifnextchar[{\@sreview}{\@freview}}
-\def\@sreview[#1]#2{\@sarticle[#1]{Review Article}{#2}}
-\def\@freview#1{\@farticle{Review Article}{#1}}
+\def\@sreview[#1]#2{\@sarticle[#1]{REVIEW ARTICLE}{#2}}
+\def\@freview#1{\@farticle{REVIEW ARTICLE}{#1}}
 %
 % Topical Review
 %
@@ -173,8 +164,8 @@
 % or contains footnotes, 50 characters maximum 
 %
 \def\topical{\@ifnextchar[{\@stopical}{\@ftopical}}
-\def\@stopical[#1]#2{\@sarticle[#1]{Topical Review}{#2}}
-\def\@ftopical#1{\@farticle{Topical Review}{#1}}
+\def\@stopical[#1]#2{\@sarticle[#1]{TOPICAL REVIEW}{#2}}
+\def\@ftopical#1{\@farticle{TOPICAL REVIEW}{#1}}
 %
 % Comments
 %
@@ -183,8 +174,8 @@
 % or contains footnotes, 50 characters maximum 
 %
 \def\comment{\@ifnextchar[{\@scomment}{\@fcomment}}
-\def\@scomment[#1]#2{\@sarticle[#1]{Comment}{#2}}
-\def\@fcomment#1{\@farticle{Comment}{#1}}
+\def\@scomment[#1]#2{\@sarticle[#1]{COMMENT}{#2}}
+\def\@fcomment#1{\@farticle{COMMENT}{#1}}
 %
 % Rapid Communications
 %
@@ -193,8 +184,8 @@
 % or contains footnotes, 50 characters maximum 
 %
 \def\rapid{\@ifnextchar[{\@srapid}{\@frapid}}
-\def\@srapid[#1]#2{\@sarticle[#1]{Rapid Communication}{#2}}
-\def\@frapid#1{\@farticle{Rapid Communication}{#1}}
+\def\@srapid[#1]#2{\@sarticle[#1]{RAPID COMMUNICATION}{#2}}
+\def\@frapid#1{\@farticle{RAPID COMMUNICATION}{#1}}
 %
 % Notes
 %
@@ -203,8 +194,8 @@
 % or contains footnotes, 50 characters maximum 
 %
 \def\note{\@ifnextchar[{\@snote}{\@fnote}}
-\def\@snote[#1]#2{\@sarticle[#1]{Note}{#2}}
-\def\@fnote#1{\@farticle{Note}{#1}}
+\def\@snote[#1]#2{\@sarticle[#1]{NOTE}{#2}}
+\def\@fnote#1{\@farticle{NOTE}{#1}}
 %
 % Preliminary Communications
 %
@@ -213,8 +204,8 @@
 % or contains footnotes, 50 characters maximum 
 %
 \def\prelim{\@ifnextchar[{\@sprelim}{\@fprelim}}
-\def\@sprelim[#1]#2{\@sarticle[#1]{Preliminary Communication}{#2}}
-\def\@fprelim#1{\@farticle{Preliminary Communication}{#1}}
+\def\@sprelim[#1]#2{\@sarticle[#1]{PRELIMINARY COMMUNICATION}{#2}}
+\def\@fprelim#1{\@farticle{PRELIMINARY COMMUNICATION}{#1}}
 %
 % List of authors
 %
@@ -701,10 +692,9 @@
 %
 \newcommand{\fulltable}[1]{\begin{table}
   \caption{#1}
-  \footnotesize
   \lineup
   \begin{tabular*}{\textwidth}{@{}l*{15}{@{\extracolsep{0pt plus 12pt}}l}}}
-\def\endfulltable{\end{tabular*}\end{table}\normalsize}
+\def\endfulltable{\end{tabular*}\end{table}}
 %
 %
 \newcommand{\Bibliography}[1]{\section*{References}\par\numrefs{#1}}
@@ -822,17 +812,6 @@ $$\halign to
 \def\eqnobysec{\numbysectrue\@addtoreset{equation}{section}}
 
 \newcounter{eqnval}
-
-% 2012: if you have an eqn numbered by parts (eg eqn 6a, 6b) this allows
-% you to refer to it by just the number (eg eqn 6) if the label is between
-% the \multiparteqn and the \numparts
-\def\multiparteqn{\addtocounter{equation}{1}
-\eqnarray\nonumber
-\endeqnarray
-
-\vspace{-72pt}
-}
-
 \def\numparts{\addtocounter{equation}{1}%
      \setcounter{eqnval}{\value{equation}}%
      \setcounter{equation}{0}%
@@ -957,7 +936,7 @@ $$\halign to
 \newcommand{\JO}{{\it J. Opt.} }
 \newcommand{\JOA}{{\it J. Opt. A: Pure Appl. Opt.} }
 \newcommand{\JOB}{{\it J. Opt. B: Quantum Semiclass. Opt.} }
-\newcommand{\JPA}{{\it J. Phys. A: Math. Gen.} } % superseded by \jpa below
+\newcommand{\JPA}{{\it J. Phys. A: Math. Gen.} }
 \newcommand{\JPB}{{\it J. Phys. B: At. Mol. Phys.} }      %1968-87
 \newcommand{\jpb}{{\it J. Phys. B: At. Mol. Opt. Phys.} } %1988 and onwards
 \newcommand{\JPC}{{\it J. Phys. C: Solid State Phys.} }   %1968--1988
@@ -968,7 +947,7 @@ $$\halign to
 \newcommand{\JPG}{{\it J. Phys. G: Nucl. Phys.} }         %1975--1988
 \newcommand{\jpg}{{\it J. Phys. G: Nucl. Part. Phys.} }   %1989 and onwards
 \newcommand{\JMM}{{\it J. Micromech. Microeng.\/} }
-\newcommand{\MSMSE}{{\it Modelling Simul. Mater. Sci. Eng.} } % sxb changed to 'Simul' 15 Mar 2011
+\newcommand{\MSMSE}{{\it Modelling Simulation Mater. Sci. Eng.} }
 \newcommand{\MST}{{\it Meas. Sci. Technol.} }                 %1990 and onwards
 \newcommand{\NET}{{\it Network: Comput. Neural Syst.} }
 \newcommand{\NJP}{{\it New J. Phys.} }
@@ -998,13 +977,13 @@ $$\halign to
 \newcommand{\CJP}{{\it Can. J. Phys.} }
 \newcommand{\JAP}{{\it J. Appl. Phys.} }
 \newcommand{\JCP}{{\it J. Chem. Phys.} }
-\newcommand{\JJAP}{{\it Jpn. J. Appl. Phys.} }
+\newcommand{\JJAP}{{\it Japan. J. Appl. Phys.} }
 \newcommand{\JP}{{\it J. Physique\/} }
 \newcommand{\JPhCh}{{\it J. Phys. Chem.} }
 \newcommand{\JMMM}{{\it J. Magn. Magn. Mater.} }
 \newcommand{\JMP}{{\it J. Math. Phys.} }
 \newcommand{\JOSA}{{\it J. Opt. Soc. Am.} }
-\newcommand{\JPSJ}{{\it J. Phys. Soc. Jpn.\/} }
+\newcommand{\JPSJ}{{\it J. Phys. Soc. Japan\/} }
 \newcommand{\JQSRT}{{\it J. Quant. Spectrosc. Radiat. Transfer\/} }
 \newcommand{\NC}{{\it Nuovo Cimento\/} }
 \newcommand{\NIM}{{\it Nucl. Instrum. Methods\/} }
@@ -1020,82 +999,6 @@ $$\halign to
 \newcommand{\RSI}{{\it Rev. Sci. Instrum.} }
 \newcommand{\SSC}{{\it Solid State Commun.} }
 \newcommand{\ZP}{{\it Z. Phys.} }
-\newcommand{\GRG}{{\it Gen. Rel. Grav.} }
-\newcommand{\PF}{{\it Phys. Fluids\/} }
-\newcommand{\SPJ}{{\it Sov. Phys.--JETP\/} }
-%
-% More journals added 8 Mar 2011, below (sxb)
-%
-\newcommand{\jpa}{{\it J. Phys. A: Math. Theor.} }
-\newcommand{\BF}{{\it Biofabrication\/} }
-\newcommand{\BB}{{\it Bioinspir. Biomim.} }
-\newcommand{\BMM}{{\it Biomed. Mater.} }
-\newcommand{\CSD}{{\it Comput. Sci. Disc.} }
-\newcommand{\ERL}{{\it Environ. Res. Lett.} }
-\newcommand{\JBR}{{\it J. Breath Res.} }
-\newcommand{\JGE}{{\it J. Geophys. Eng.} }
-\newcommand{\JOPT}{{\it J. Opt.} }
-\newcommand{\JRP}{{\it J. Radiol. Prot.} }
-\newcommand{\MET}{{\it Metrologia\/} }
-\newcommand{\NF}{{\it Nucl. Fusion\/} }
-\newcommand{\PED}{{\it Phys. Educ.} }
-%
-% More journals added 6 Feb 2014, below (sxb)
-%
-\newcommand{\TDM}{{\it 2D Mater.} }
-\newcommand{\MRE}{{\it Mater. Res. Express\/} }
-\newcommand{\MAF}{{\it Methods Appl. Fluoresc.} }
-\newcommand{\TMR}{{\it Transl. Mater. Res.} }
-\newcommand{\STMP}{{\it Surf. Topogr.: Metrol. Prop.} }
-%
-% The following journals are externally-edited and the usual IOP Publishing
-% submission guidelines do *not* apply if you're submitting to them.
-%
-\newcommand{\AJ}{{\it AJ\/} }
-\newcommand{\APJ}{{\it ApJ\/} }
-\newcommand{\APJL}{{\it ApJL\/} }
-\newcommand{\APJS}{{\it ApJS\/} }
-\newcommand{\ANSN}{{\it Adv. Nat. Sci: Nanosci. Nanotechnol.} }
-\newcommand{\CJCP}{{\it Chin. J. Chem. Phys.} }
-\newcommand{\CPB}{{\it Chinese Phys. B\/} }
-\newcommand{\CPC}{{\it Chinese Phys. C\/} }
-\newcommand{\CPL}{{\it Chinese Phys. Lett.} }
-\newcommand{\CTP}{{\it Commun. Theor. Phys.} }
-\newcommand{\EPL}{{\it EPL\/} }
-\newcommand{\FDR}{{\it Fluid Dyn. Res.} }
-\newcommand{\IZV}{{\it Izv. Math.} }
-\newcommand{\JOS}{{\it J. Semicond.} }
-\newcommand{\PHU}{{\it Phys.-Usp.} }
-\newcommand{\PST}{{\it Plasma Sci. Technol.} }
-\newcommand{\QEL}{{\it Quantum Electron.} }
-\newcommand{\RAA}{{\it Res. Astron. Astrophys.} }
-\newcommand{\RCR}{{\it Russ. Chem. Rev.} }
-\newcommand{\RMS}{{\it Russ. Math. Surv.} }
-\newcommand{\MSB}{{\it Sb. Math.} }
-\newcommand{\SFC}{{\it Science Foundation in China\/} }
-\newcommand{\STAM}{{\it Sci. Technol. Adv. Mater.} }
-\newcommand{\LP}{{\it Laser Phys.} }
-\newcommand{\LPL}{{\it Laser Phys. Lett.} }
-\newcommand{\APEX}{{\it Appl. Phys. Express\/} }
-%
-% SISSA journals
-%
-\newcommand{\JCAP}{{\it JCAP\/} }
-\newcommand{\JHEP}{{\it J. High Energy Phys.\/} }
-\newcommand{\JSTAT}{{\it J. Stat. Mech.} }
-\newcommand{\JINST}{{\it JINST\/} }
-%
-% These are the IOP Conference Series journals: again, if you're
-% submitting to one of these journals you shouldn't be using iopart.cls
-%
-\newcommand{\JPCS}{{\it J. Phys.: Conf. Ser.} }
-\newcommand{\EES}{{\it IOP Conf. Ser.: Earth Environ. Sci.} }
-\newcommand{\MSE}{{\it IOP Conf. Ser.: Mater. Sci. Eng.} }
-
-% 2012 new option for twocolumn output
-\def\ioptwocol{\setlength\hoffset{-0.5in}\setlength\voffset{-0.5in}\setlength\textwidth{6.75in}
-\setlength\columnsep{0.2in}\setlength\textheight{9.25in}\mathindent=0in\twocolumn}
-%
 %
 \pagestyle{headings}
 \pagenumbering{arabic}      % Arabic page numbers

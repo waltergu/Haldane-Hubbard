@@ -228,9 +228,9 @@ def phase():
 
     # phase diagram
     ax=axes[0]
-    t=np.array([0.10,0.15,0.20,0.25,0.30])
-    u_gap=np.array([3.5,4.1,4.6,5.0,5.4])
-    u_afm=np.array([4.45,4.98,5.62,6.49,8.0])
+    t=np.array([0.00,0.05,0.10,0.15,0.20,0.25,0.30])
+    u_gap=np.array([0.00,2.80,3.60,4.10,4.60,5.00,5.40])
+    u_afm=np.array([3.84,4.02,4.45,4.98,5.62,6.49,8.00])
     X=np.linspace(t.min(),t.max(),201)
     Y_gap=itp.splev(X,itp.splrep(t,u_gap,k=2),der=0)
     Y_afm=itp.splev(X,itp.splrep(t,u_afm,k=2),der=0)
@@ -244,13 +244,13 @@ def phase():
     ax.scatter(0.20,5.75,color='k',s=10,zorder=4,facecolors='none')
     ax.scatter(0.20,5.87,color='k',s=10,zorder=4,facecolors='none')
     ax.scatter(0.20,6.0,color='k',s=10,zorder=4,facecolors='none')
-    ax.text(0.17,2.00,'CI',va='center',ha='left',color='k',fontsize=24)
-    ax.text(0.23,5.52,'NMI',va='center',ha='left',color='k',fontsize=24)
-    ax.text(0.21,8.00,"AFM",va='center',ha='left',color='k',fontsize=24)
-    ax.set_xlim(0.1,0.3)
+    ax.text(0.14,2.00,'CI',va='center',ha='left',color='k',fontsize=22)
+    ax.text(0.23,5.58,'NMI',va='center',ha='left',color='k',fontsize=22)
+    ax.text(0.175,8.00,"AFM",va='center',ha='left',color='k',fontsize=22)
+    ax.set_xlim(0.0,0.3)
     ax.set_ylim(0.0,10.0)
     ax.minorticks_on()
-    ax.set_xticks(np.linspace(0.1,0.3,5))
+    ax.set_xticks(np.linspace(0.0,0.3,4))
     ax.set_yticks(np.linspace(0.0,10.0,6))
     for tick in ax.get_xticklabels():
         tick.set_fontsize(14)
@@ -258,7 +258,7 @@ def phase():
         tick.set_fontsize(14)
     ax.set_xlabel("$t'/t$",fontdict={'fontsize':18})
     ax.set_ylabel("$U/t$",fontdict={'fontsize':18})
-    ax.text(0.055,9.8,'(a)',fontsize=18,ha='left',va='center',color='black')
+    ax.text(-0.07,9.8,'(a)',fontsize=18,ha='left',va='center',color='black')
 
 
     # Potthoff potential
@@ -347,14 +347,14 @@ def h2chernnumber():
     plt.ion()
 
     fig,axes=plt.subplots(nrows=1,ncols=2)
-    fig.subplots_adjust(left=0.090,right=0.980,top=0.960,bottom=0.160,wspace=0.250)
+    fig.subplots_adjust(left=0.090,right=0.980,top=0.960,bottom=0.145,wspace=0.250)
 
     # h2 phase diagram
     ax=axes[0]
-    t=np.array([0.10,0.15,0.20,0.25,0.30])
-    u_gap=np.array([3.5,4.1,4.6,5.0,5.4])
-    u_afm=np.array([4.45,4.98,5.62,6.49,8.0])
-    u_cn=np.array([4.6,5.20,5.87,6.8,8.33])
+    t=np.array([0.00,0.05,0.10,0.15,0.20,0.25,0.30])
+    u_gap=np.array([0.00,2.80,3.60,4.10,4.60,5.00,5.40])
+    u_afm=np.array([3.84,4.02,4.45,4.98,5.62,6.49,8.00])
+    u_cn=np.array([3.84,4.12,4.6,5.20,5.87,6.8,8.33])
     X=np.linspace(t.min(),t.max(),201)
     Y_gap=itp.splev(X,itp.splrep(t,u_gap,k=2),der=0)
     Y_afm=itp.splev(X,itp.splrep(t,u_afm,k=2),der=0)
@@ -365,9 +365,9 @@ def h2chernnumber():
     ax.fill_between(X,y1=Y_cn,y2=Y_gap,color=(0.8,1.0,0.5))
     ax.fill_between(X,y1=10.0,y2=Y_cn,color=(1.0,0.7,0.5))
     ax.vlines(0.20,0.0,10.0,colors='grey',linestyles='dotted',alpha=0.5)
-    ax.text(0.17,2.00,'CI (C=2)',va='center',ha='left',color='k',fontsize=13)
-    ax.text(0.21,5.47,'NMI (C=-2)',va='center',ha='left',color='k',fontsize=13)
-    ax.text(0.15,8.50,"AFM (C=0)",va='center',ha='left',color='k',fontsize=13)
+    ax.text(0.12,2.00,'CI (C=2)',va='center',ha='left',color='k',fontsize=13)
+    ax.text(0.21,5.49,'NMI (C=-2)',va='center',ha='left',color='k',fontsize=13)
+    ax.text(0.11,8.50,"AFM (C=0)",va='center',ha='left',color='k',fontsize=13)
     ax.annotate('AFM (C=-2)',color='k',fontsize=13,xy=(0.19,5.45),xytext=(0.18,6.5),ha='center',arrowprops={'color':'k','arrowstyle':'->'})
     ax.scatter(0.20,4.0,color='k',s=10,zorder=4,facecolors='none')
     ax.scatter(0.20,4.6,color='k',s=10,zorder=4,facecolors='none')
@@ -375,10 +375,10 @@ def h2chernnumber():
     ax.scatter(0.20,5.75,color='k',s=10,zorder=4,facecolors='none')
     ax.scatter(0.20,5.87,color='k',s=10,zorder=4,facecolors='none')
     ax.scatter(0.20,6.0,color='k',s=10,zorder=4,facecolors='none')
-    ax.set_xlim(0.1,0.3)
+    ax.set_xlim(0.0,0.3)
     ax.set_ylim(0.0,10.0)
     ax.minorticks_on()
-    ax.set_xticks(np.linspace(0.1,0.3,5))
+    ax.set_xticks(np.linspace(0.0,0.3,4))
     ax.set_yticks(np.linspace(0.0,10.0,6))
     for tick in ax.get_xticklabels():
         tick.set_fontsize(14)
@@ -386,7 +386,7 @@ def h2chernnumber():
         tick.set_fontsize(14)
     ax.set_xlabel("$t'/t$",fontdict={'fontsize':18})
     ax.set_ylabel("$U/t$",fontdict={'fontsize':18})
-    ax.text(0.055,9.8,'(a)',fontsize=18,ha='left',va='center',color='black')
+    ax.text(-0.068,9.8,'(a)',fontsize=18,ha='left',va='center',color='black')
 
 
     # h2 Chern number
@@ -509,13 +509,13 @@ def h6chernnumber():
     plt.ion()
 
     fig,axes=plt.subplots(nrows=1,ncols=2)
-    fig.subplots_adjust(left=0.090,right=0.980,top=0.960,bottom=0.160,wspace=0.250)
+    fig.subplots_adjust(left=0.090,right=0.980,top=0.960,bottom=0.145,wspace=0.250)
 
     # h6 phase diagram
     ax=axes[0]
-    t=np.array([0.10,0.15,0.20,0.25,0.30])
-    u_gap=np.array([3.5,4.1,4.6,5.0,5.4])
-    u_afm=np.array([4.45,4.98,5.62,6.49,8.0])
+    t=np.array([0.00,0.05,0.10,0.15,0.20,0.25,0.30])
+    u_gap=np.array([0.00,2.80,3.60,4.10,4.60,5.00,5.40])
+    u_afm=np.array([3.84,4.02,4.45,4.98,5.62,6.49,8.00])
     X=np.linspace(t.min(),t.max(),201)
     Y_gap=itp.splev(X,itp.splrep(t,u_gap,k=2),der=0)
     Y_afm=itp.splev(X,itp.splrep(t,u_afm,k=2),der=0)
@@ -524,19 +524,19 @@ def h6chernnumber():
     ax.fill_between(X,y1=Y_gap,y2=0.0,color=(0.8,0.5,1.0))
     ax.fill_between(X,y1=Y_gap,y2=10.0,color=(1.0,0.7,0.5))
     ax.vlines(0.20,0.0,10.0,colors='grey',linestyles='dotted',alpha=0.5)
-    ax.text(0.17,2.00,'CI (C=2)',va='center',ha='left',color='k',fontsize=13)
-    ax.text(0.21,5.47,'NMI (C=0)',va='center',ha='left',color='k',fontsize=13)
-    ax.text(0.15,8.50,"AFM (C=0)",va='center',ha='left',color='k',fontsize=13)
+    ax.text(0.12,2.00,'CI (C=2)',va='center',ha='left',color='k',fontsize=13)
+    ax.text(0.21,5.49,'NMI (C=0)',va='center',ha='left',color='k',fontsize=13)
+    ax.text(0.11,8.50,"AFM (C=0)",va='center',ha='left',color='k',fontsize=13)
     ax.scatter(0.20,4.0,color='k',s=10,zorder=4,facecolors='none')
     ax.scatter(0.20,4.6,color='k',s=10,zorder=4,facecolors='none')
     ax.scatter(0.20,5.0,color='k',s=10,zorder=4,facecolors='none')
     ax.scatter(0.20,5.75,color='k',s=10,zorder=4,facecolors='none')
     ax.scatter(0.20,5.87,color='k',s=10,zorder=4,facecolors='none')
     ax.scatter(0.20,6.0,color='k',s=10,zorder=4,facecolors='none')
-    ax.set_xlim(0.1,0.3)
+    ax.set_xlim(0.0,0.3)
     ax.set_ylim(0.0,10.0)
     ax.minorticks_on()
-    ax.set_xticks(np.linspace(0.1,0.3,5))
+    ax.set_xticks(np.linspace(0.0,0.3,4))
     ax.set_yticks(np.linspace(0.0,10.0,6))
     for tick in ax.get_xticklabels():
         tick.set_fontsize(14)
@@ -544,7 +544,7 @@ def h6chernnumber():
         tick.set_fontsize(14)
     ax.set_xlabel("$t'/t$",fontdict={'fontsize':18})
     ax.set_ylabel("$U/t$",fontdict={'fontsize':18})
-    ax.text(0.055,9.8,'(a)',fontsize=18,ha='left',va='center',color='black')
+    ax.text(-0.068,9.8,'(a)',fontsize=18,ha='left',va='center',color='black')
 
 
     # h6 Chern number
