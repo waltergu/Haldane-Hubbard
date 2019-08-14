@@ -621,6 +621,134 @@ def h6spectra():
     plt.savefig('h6spectra.pdf')
     plt.close()
 
+def h2spectra_thesis():
+    plt.ion()
+
+    fig,axes=plt.subplots(nrows=4,ncols=3,sharex='col')
+    fig.subplots_adjust(left=0.12,right=0.98,top=0.98,bottom=0.06,hspace=0.15,wspace=0.43)
+
+    nk,ne=300,401
+    Us=['4.0','4.6','5.0','5.75','5.87','6.0']
+    afms=['0.0','0.0','0.0','0.0228','0.0306','0.0362']
+    tags=['a','b','c','d','e','f']
+    for i,(tag,U,afm) in enumerate(zip(tags,Us,afms)):
+        ax=axes[i//3*2][i%3]
+        data=np.loadtxt('../result/vca/HH_H6_H2_0.5_-1.0_0.2j_%s_%s_VCA_EB.dat'%(U,afm))
+        x=data[:,0].reshape((ne,nk))
+        y=data[:,1].reshape((ne,nk))
+        z=data[:,2].reshape((ne,nk))
+        ax.pcolormesh(x,y,z,cmap='gnuplot',rasterized=True)
+        ax.axvline(x=99,ymin=0,ymax=1,ls='dotted',linewidth=1,color='red',alpha=0.5,zorder=2)
+        ax.axvline(x=199,ymin=0,ymax=1,ls='dotted',linewidth=1,color='red',alpha=0.5,zorder=2)
+        ax.text(210,2.8,'(%s$_1$)'%tag,fontsize=13,color='white')
+        ax.set_xlim(0,299)
+        ax.minorticks_on()
+        ax.set_yticks([-4,-2,0,2,4])
+        for tick in ax.get_yticklabels(): tick.set_fontsize(14)
+    for i,(tag,U,afm) in enumerate(zip(tags,Us,afms)):
+        ax=axes[i//3*2+1][i%3]
+        data=np.loadtxt('../result/vca/HH_H6_H2_0.5_-1.0_0.2j_%s_%s_VCA_TEB.dat'%(U,afm))
+        ax.plot(data[:,0],data[:,1:],color='green',linewidth=3)
+        ax.axvline(x=99,ymin=0,ymax=1,ls='dotted',linewidth=1,color='red',alpha=0.5,zorder=2)
+        ax.axvline(x=199,ymin=0,ymax=1,ls='dotted',linewidth=1,color='red',alpha=0.5,zorder=2)
+        ax.text(210,data[:,1:].max()*0.85,'(%s$_2$)'%tag,va='center',fontsize=13,color='black')
+        ax.set_xlim(0,299)
+        ax.minorticks_on()
+        ax.set_xticks([0,99,199,299])
+        ax.set_yticks([-4,-2,0,2,4] if i in (0,1,2) else [-10,-5,0,5,10] if i==3 else [-10000,-5000,0,5000,10000] if i==4 else [-20,-10,0,10,20])
+        for tick in ax.get_yticklabels():
+            tick.set_fontsize(10 if i==4 else 14)
+        if i>=3: ax.set_xticklabels(["$\Gamma$","$K$","$M$","$\Gamma$"],fontdict={'fontsize':15})
+    for i in range(4): axes[i][0].set_ylabel('Energy/t',fontsize=14)
+
+    pdb.set_trace()
+    plt.savefig('h2spectra_thesis.pdf')
+    plt.close()
+
+def edge_thesis():
+    plt.ion()
+
+    fig,axes=plt.subplots(nrows=4,ncols=3,sharex='col')
+    fig.subplots_adjust(left=0.09,right=0.98,top=0.98,bottom=0.05,hspace=0.15,wspace=0.30)
+
+    nk,ne=200,400
+    Us=['4.0','4.6','5.0','5.75','5.87','6.0']
+    afms=['0.0','0.0','0.0','0.0228','0.0306','0.0362']
+    tags=['a','b','c','d','e','f']
+    for i,(tag,U,afm) in enumerate(zip(tags,Us,afms)):
+        ax=axes[i//3*2][i%3]
+        data=np.loadtxt('../result/vca/HH_H6^1P15O_0.5_-1.0_0.2j_%s_%s_VCACCT_EB.dat'%(U,afm))
+        x=data[:,0].reshape((ne,nk))
+        y=data[:,1].reshape((ne,nk))
+        z=data[:,2].reshape((ne,nk))
+        ax.pcolormesh(x,y,z,cmap='gnuplot',rasterized=True)
+        ax.text(145,2.8,'(%s$_1$)'%tag,fontsize=15,color='white')
+        ax.set_xlim(0,199)
+        ax.set_ylim(-4.0,4.0)
+        ax.minorticks_on()
+        ax.set_yticks([-4,-2,0,2,4])
+        for tick in ax.get_yticklabels(): tick.set_fontsize(14)
+    for i,(tag,U,afm) in enumerate(zip(tags,Us,afms)):
+        ax=axes[i//3*2+1][i%3]
+        data=np.loadtxt('../result/vca/HH_H6^1P15O_0.5_-1.0_0.2j_%s_%s_VCACCT_TEB.dat'%(U,afm))
+        ax.plot(data[:,0],data[:,1:],color='green',linewidth=2)
+        ax.text(135,5*0.7,'(%s$_2$)'%tag,fontsize=14,color='black')
+        ax.set_xlim(0,199)
+        ax.set_ylim(-5,5)
+        ax.minorticks_on()
+        ax.set_yticks([-5,-3,-1,1,3,5])
+        for tick in ax.get_yticklabels(): tick.set_fontsize(14)
+        ax.set_xticks([0,99,199])
+        if i>=3: ax.set_xticklabels(["$-\pi$","$0$","$\pi$"],fontsize=14)
+    for i in range(4): axes[i][0].set_ylabel('Energy/t',fontsize=14)
+
+    pdb.set_trace()
+    plt.savefig('edge_thesis.pdf')
+    plt.close()
+
+def h6spectra_thesis():
+    plt.ion()
+
+    fig,axes=plt.subplots(nrows=4,ncols=3,sharex='col')
+    fig.subplots_adjust(left=0.1,right=0.98,top=0.98,bottom=0.060,hspace=0.2,wspace=0.30)
+
+    nk,ne=300,401
+    Us=['4.0','4.6','5.0','5.75','5.87','6.0']
+    afms=['0.0','0.0','0.0','0.0228','0.0306','0.0362']
+    tags=['a','b','c','d','e','f']
+    for i,(tag,U,afm) in enumerate(zip(tags,Us,afms)):
+        ax=axes[i//3*2][i%3]
+        data=np.loadtxt('../result/vca/HH_H6_H6_0.5_-1.0_0.2j_%s_%s_VCA_EB.dat'%(U,afm))
+        x=data[:,0].reshape((ne,nk))
+        y=data[:,1].reshape((ne,nk))
+        z=data[:,2].reshape((ne,nk))
+        ax.pcolormesh(x,y,z,cmap='gnuplot',rasterized=True)
+        ax.axvline(x=99,ymin=0,ymax=1,ls='dotted',linewidth=1,color='red',alpha=0.5,zorder=2)
+        ax.axvline(x=199,ymin=0,ymax=1,ls='dotted',linewidth=1,color='red',alpha=0.5,zorder=2)
+        ax.text(210,2.8,'(%s$_1$)'%tag,fontsize=13,color='white')
+        ax.set_xlim(0,299)
+        ax.minorticks_on()
+        ax.set_yticks([-4,-2,0,2,4])
+        for tick in ax.get_yticklabels(): tick.set_fontsize(14)
+    for i,(tag,U,afm) in enumerate(zip(tags,Us,afms)):
+        ax=axes[i//3*2+1][i%3]
+        data=np.loadtxt('../result/vca/HH_H6_H6_0.5_-1.0_0.2j_%s_%s_VCA_TEB.dat'%(U,afm))
+        ax.plot(data[:,0],data[:,1:],color='green',linewidth=3)
+        ax.axvline(x=99,ymin=0,ymax=1,ls='dotted',linewidth=1,color='red',alpha=0.5,zorder=2)
+        ax.axvline(x=199,ymin=0,ymax=1,ls='dotted',linewidth=1,color='red',alpha=0.5,zorder=2)
+        ax.text(210,data[:,1:].max()*0.85,'(%s$_2$)'%tag,va='center',fontsize=13,color='black')
+        ax.set_xlim(0,299)
+        ax.minorticks_on()
+        ax.set_xticks([0,99,199,299])
+        ax.set_yticks([-4,-2,0,2,4] if i in (0,1,2) else [-6,-3,0,3,6])
+        for tick in ax.get_yticklabels(): tick.set_fontsize(14)
+        if i>=3: ax.set_xticklabels(["$\Gamma$","$K_R$","$M_R$","$\Gamma$"],fontdict={'fontsize':15})
+    for i in range(4): axes[i][0].set_ylabel('Energy/t',fontsize=14)
+
+    pdb.set_trace()
+    plt.savefig('h6spectra_thesis.pdf')
+    plt.close()
+
 if __name__=='__main__':
     import sys
     for arg in sys.argv:
@@ -631,3 +759,6 @@ if __name__=='__main__':
         if arg in ('5','all'): edge()
         if arg in ('6','all'): h6chernnumber()
         if arg in ('7','all'): h6spectra()
+        if arg in ('1-1','all'): h2spectra_thesis()
+        if arg in ('1-2','all'): edge_thesis()
+        if arg in ('1-3','all'): h6spectra_thesis()
